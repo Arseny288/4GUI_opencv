@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'] },
+          colors: { brand: { yellow: '#F5C518', black: '#0A0A0A' } },
+          boxShadow: {
+            glow: '0 0 0 1px rgba(245,197,24,.45), 0 12px 48px rgba(245,197,24,.18)'
+          }
+        }
+      }
+    }
+  </script>
+  <title>Sign in</title>
+  <style>
+    .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+             background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+             border: 1px solid rgba(255,255,255,.14); }
+    .bg-grid {
+      background-color: #0A0A0A;
+      background-image:
+        radial-gradient(circle at 80% -10%, rgba(245,197,24,.25), transparent 45%),
+        radial-gradient(circle at -10% 110%, rgba(245,197,24,.18), transparent 45%),
+        linear-gradient(rgba(245,197,24,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,197,24,.06) 1px, transparent 1px);
+      background-size: auto, auto, 40px 40px, 40px 40px;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-grid text-white">
+  <div class="min-h-screen grid place-items-center p-4">
+    <div class="glass rounded-3xl p-8 w-full max-w-md shadow-glow">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-glow"
+             style="background: linear-gradient(135deg,#F5C518,#d4a912);">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 5h18v2H3V5zm4 6h14v2H7v-2zm-4 6h18v2H3v-2z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-2xl font-extrabold tracking-tight">Control Center</h1>
+          <p class="text-xs text-white/60 -mt-0.5">Secure • Yellow × Black • Glass</p>
+        </div>
+      </div>
+
+      <form id="f" class="space-y-4">
+        <div>
+          <label class="text-xs uppercase tracking-wide text-white/70">Username</label>
+          <input name="username" placeholder="admin"
+                 class="mt-1 w-full px-4 py-3 rounded-2xl glass outline-none focus:ring-2 focus:ring-[rgba(245,197,24,.6)]" required>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wide text-white/70">Password</label>
+          <input name="password" type="password" placeholder="••••••••"
+                 class="mt-1 w-full px-4 py-3 rounded-2xl glass outline-none focus:ring-2 focus:ring-[rgba(245,197,24,.6)]" required>
+        </div>
+        <button class="w-full py-3 rounded-2xl font-semibold text-black shadow-glow"
+                style="background: linear-gradient(135deg,#F5C518,#d4a912);">
+          Sign in
+        </button>
+      </form>
+      <p id="e" class="text-rose-400 text-sm mt-3 hidden">Invalid credentials</p>
+      <p class="text-xs text-white/45 mt-4">Креды меняются переменными окружения.</p>
+    </div>
+  </div>
+
+  <script>
+    const f = document.getElementById('f');
+    const e = document.getElementById('e');
+    f.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const fd = new FormData(f);
+      const r = await fetch('/auth/login', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(Object.fromEntries(fd))
+      });
+      if(!r.ok){ e.classList.remove('hidden'); return; }
+      const j = await r.json();
+      localStorage.setItem('token', j.access_token);
+      location.href = '/public/dashboard.html';
+    });
+  </script>
+</body>
+</html>
+

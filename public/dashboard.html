@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','ui-sans-serif','system-ui'] },
+          colors: { brand: { yellow: '#F5C518', black: '#0A0A0A' } },
+          boxShadow: {
+            glow: '0 0 0 1px rgba(245,197,24,.45), 0 12px 48px rgba(245,197,24,.18)',
+            card: '0 1px 0 rgba(255,255,255,.08), inset 0 1px 0 rgba(255,255,255,.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <title>Control Center</title>
+  <style>
+    :root{
+      --y0:#F5C518; --y1:#d6ad14; --ink:#0A0A0A;
+      --g1:rgba(255,255,255,.10); --g2:rgba(255,255,255,.04); --gb:rgba(255,255,255,.14);
+    }
+    .bg-grid{
+      background:#0A0A0A;
+      background-image:
+        radial-gradient(circle at 85% -10%, rgba(245,197,24,.22), transparent 45%),
+        radial-gradient(circle at -10% 110%, rgba(245,197,24,.18), transparent 45%),
+        linear-gradient(rgba(245,197,24,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,197,24,.06) 1px, transparent 1px);
+      background-size:auto,auto,40px 40px,40px 40px;
+    }
+    .glass{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+      background:linear-gradient(135deg,var(--g1),var(--g2));border:1px solid var(--gb);}
+    .gbtn{position:relative;display:inline-flex;align-items:center;justify-content:center;padding:0;
+      min-width:64px;min-height:64px;border-radius:20px;color:#0b0b0b;font-weight:800;
+      background:linear-gradient(135deg,var(--y0),var(--y1));box-shadow:0 12px 40px rgba(245,197,24,.22);
+      border:1px solid rgba(0,0,0,.15);transition:transform .08s ease,filter .2s ease;}
+    .gbtn:hover{filter:saturate(1.05) brightness(1.02)}
+    .gbtn:active{transform:translateY(1px) scale(.99)}
+    .gbtn-dark{color:#fff;background:linear-gradient(135deg,#1f1f1f,#000);
+      box-shadow:0 12px 40px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06)}
+  </style>
+</head>
+<body class="bg-grid text-white min-h-screen">
+  <div class="max-w-7xl mx-auto p-5 space-y-4">
+    <!-- Header -->
+    <div class="flex items-center gap-3">
+      <div class="w-12 h-12 rounded-2xl flex items-center justify-center shadow-glow"
+           style="background:linear-gradient(135deg,var(--y0),var(--y1));">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 5h18v2H3zM3 11h18v2H3zM3 17h18v2H3z"/>
+        </svg>
+      </div>
+      <div class="grow">
+        <h1 class="text-2xl font-extrabold tracking-tight">Control Center</h1>
+        <p class="text-xs text-white/60 -mt-0.5">Live Streams • Robot • Logs</p>
+      </div>
+      <button id="logout" class="px-4 py-2 rounded-2xl font-semibold text-black shadow-glow"
+              style="background:linear-gradient(135deg,var(--y0),var(--y1));">Logout</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Stream A -->
+      <div class="glass rounded-3xl p-3 shadow-card h-[42vh] flex items-center justify-center">
+        <img id="imgA" class="max-h-full rounded-2xl object-contain ring-1 ring-white/10" alt="Stream A">
+      </div>
+
+      <!-- Robot Control (centered & compact) -->
+<div class="glass rounded-3xl p-5 shadow-card h-[42vh] flex flex-col items-center justify-center">
+  <div class="w-full max-w-sm flex flex-col items-center mb-4">
+    <span class="text-sm text-white/70 font-medium mb-1">Speed</span>
+    <input id="speed" type="range" min="0" max="100" value="50"
+           class="w-full accent-yellow-400">
+  </div>
+
+  <div class="grid grid-rows-3 grid-cols-3 gap-4 place-items-center">
+    <span></span>
+    <button id="btn-up" class="gbtn" style="min-width:72px;min-height:72px;font-size:24px;">↑</button>
+    <span></span>
+
+    <button id="btn-left" class="gbtn" style="min-width:72px;min-height:72px;font-size:24px;">←</button>
+    <button id="btn-toggle" class="gbtn gbtn-dark" style="min-width:72px;min-height:72px;font-size:22px;">▶</button>
+    <button id="btn-right" class="gbtn" style="min-width:72px;min-height:72px;font-size:24px;">→</button>
+
+    <span></span>
+    <button id="btn-down" class="gbtn" style="min-width:72px;min-height:72px;font-size:24px;">↓</button>
+    <span></span>
+  </div>
+
+  <div class="text-xs text-white/50 mt-3 text-center">Arrows/WASD = set direction • Space = Play/Stop</div>
+</div>
+
+      <!-- Stream B -->
+      <div class="glass rounded-3xl p-3 shadow-card h-[42vh] flex items-center justify-center">
+        <img id="imgB" class="max-h-full rounded-2xl object-contain ring-1 ring-white/10" alt="Stream B">
+      </div>
+
+      <!-- Logs -->
+      <div class="glass rounded-3xl p-4 shadow-card h-[42vh] flex flex-col">
+        <div class="flex items-center gap-3">
+          <h2 class="text-lg font-semibold">Logs</h2>
+          <select id="logLevel" class="ml-auto px-3 py-2 rounded-2xl glass outline-none">
+            <option value="info">info</option>
+            <option value="warn">warn</option>
+            <option value="error">error</option>
+          </select>
+        </div>
+        <div id="log" class="mt-3 overflow-auto text-sm grow rounded-2xl glass p-3 ring-1 ring-white/10"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CFG = {
+      wsbase: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`,
+      streamA: 'A',
+      streamB: 'B',
+      robotId: 'r1',
+    };
+
+    const token = localStorage.getItem('token');
+    if (!token) location.href = '/public/login.html';
+
+    document.getElementById('logout').onclick = () => {
+      localStorage.removeItem('token');
+      location.href = '/public/login.html';
+    };
+
+    // --- Streams & Logs ---
+    let wsA, wsB, wsLogs;
+
+    function connectStream(imgEl, id){
+      const u = new URL(CFG.wsbase);
+      u.searchParams.set('role','view');
+      u.searchParams.set('stream', id);
+      u.searchParams.set('token', token);
+      const ws = new WebSocket(u.toString());
+      ws.binaryType = 'arraybuffer';
+      let last = null;
+      ws.onmessage = ev => {
+        if (typeof ev.data === 'string') return;
+        const url = URL.createObjectURL(new Blob([ev.data], {type:'image/jpeg'}));
+        if (last) URL.revokeObjectURL(last);
+        imgEl.src = url; last = url;
+      };
+      ws.onclose = () => setTimeout(() => connectStream(imgEl, id), 1200);
+      return ws;
+    }
+
+    function connectLogs(){
+      const u = new URL(CFG.wsbase);
+      u.searchParams.set('role','logs');
+      u.searchParams.set('level', document.getElementById('logLevel').value);
+      u.searchParams.set('token', token);
+      const ws = new WebSocket(u.toString());
+      const box = document.getElementById('log');
+      ws.onmessage = ev => {
+        const m = JSON.parse(ev.data);
+        const dt = new Date(m.ts).toLocaleTimeString();
+        const line = document.createElement('div');
+        line.className = 'mb-1';
+        line.innerHTML = `<span class="text-white/40">[${dt}]</span>
+          <span class="${m.level==='error'?'text-rose-400':(m.level==='warn'?'text-yellow-300':'text-white')}">
+          ${m.level.toUpperCase()}</span> <span class="text-white/90">${m.text}</span>`;
+        box.appendChild(line); box.scrollTop = box.scrollHeight;
+      };
+      ws.onclose = () => setTimeout(connectLogs, 1200);
+      document.getElementById('logLevel').onchange = () => { ws.close(); box.innerHTML = ''; };
+      return ws;
+    }
+
+    function connectAll(){
+      try{ wsA && wsA.close(); }catch{}
+      try{ wsB && wsB.close(); }catch{}
+      try{ wsLogs && wsLogs.close(); }catch{}
+      wsA   = connectStream(document.getElementById('imgA'), CFG.streamA);
+      wsB   = connectStream(document.getElementById('imgB'), CFG.streamB);
+      wsLogs= connectLogs();
+    }
+    connectAll();
+
+    // --- Robot Control Logic ---
+    const btnUp = document.getElementById('btn-up');
+    const btnDown = document.getElementById('btn-down');
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const btnToggle = document.getElementById('btn-toggle');
+    const speed = document.getElementById('speed');
+
+    let driveEnabled = false, currentDir = null, tickTimer = null;
+
+    async function sendREST(action){
+      const body = JSON.stringify({ action, speed: +speed.value });
+      await fetch(`/api/robot/${encodeURIComponent(CFG.robotId)}/control`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body
+      }).catch(()=>{});
+    }
+
+    function updateToggle(){
+      btnToggle.textContent = driveEnabled ? '■' : '▶';
+    }
+    function setDirection(dir){
+      currentDir = dir;
+      if (driveEnabled && dir) sendREST(dir);
+    }
+    function tick(){
+      if (driveEnabled && currentDir) sendREST(currentDir);
+      tickTimer = setTimeout(tick, 120);
+    }
+    function startDrive(){
+      if (driveEnabled) return;
+      driveEnabled = true; updateToggle();
+      if (currentDir) sendREST(currentDir);
+      clearTimeout(tickTimer); tickTimer = setTimeout(tick, 120);
+    }
+    function stopDrive(){
+      if (!driveEnabled) return;
+      driveEnabled = false; updateToggle();
+      clearTimeout(tickTimer); tickTimer = null;
+      sendREST('stop');
+    }
+
+    btnUp.onclick = () => setDirection('up');
+    btnDown.onclick = () => setDirection('down');
+    btnLeft.onclick = () => setDirection('left');
+    btnRight.onclick = () => setDirection('right');
+    btnToggle.onclick = () => (driveEnabled ? stopDrive() : startDrive());
+
+    const dirKeys = { ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right', w:'up', s:'down', a:'left', d:'right' };
+    addEventListener('keydown', e=>{
+      const k = e.key.toLowerCase();
+      if (k in dirKeys){ e.preventDefault(); setDirection(dirKeys[k]); }
+      else if (k===' '){ e.preventDefault(); driveEnabled ? stopDrive() : startDrive(); }
+    });
+    updateToggle();
+  </script>
+</body>
+</html>
