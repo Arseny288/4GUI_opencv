@@ -1,68 +1,76 @@
+# 📘 Full Guide: Multi-Stream Video Server + Raspberry Pi Ingest (Node.js + WebSockets)
 
-📘 Full Guide: Multi-Stream Video Server + Raspberry Pi Ingest (Node.js + WebSockets)
 This guide explains how to:
-Install Node.js on macOS
 
-
-Run a secure WebSocket video ingest server
-
-
-Configure environment variables
-
-
-Stream two video feeds (A and B) from a Raspberry Pi
-
-
-View video streams in a dashboard
-
-
-Use a simple token-based authentication system
-
+- Install Node.js on macOS  
+- Run a secure WebSocket video ingest server  
+- Configure environment variables  
+- Stream two video feeds (A and B) from a Raspberry Pi  
+- View video streams in a dashboard  
+- Use a simple token-based authentication system  
 
 Designed for a Raspberry Pi + macOS setup.
 
-🚀 1. Install Node.js on macOS
-Option 1 — Install Node.js via Homebrew (recommended)
+---
+
+## 🚀 1. Install Node.js on macOS
+
+### Option 1 — Install via Homebrew (recommended)
+```
 brew update
 brew install node
+```
 
 Verify installation:
+```
 node -v
 npm -v
+```
 
-Option 2 — Install using Node Version Manager
+### Option 2 — Install using NVM
+```
 brew install nvm
 mkdir ~/.nvm
 echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
 echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
 source ~/.zshrc
 nvm install --lts
+```
 
+---
 
-📂 2. Clone Your GitHub Repository
+## 📂 2. Clone Your GitHub Repository
+```
 git clone https://github.com/<your-username>/js-stream.git
 cd js-stream
+```
 
+---
 
-🔧 3. Install Project Dependencies
-Inside the project folder:
+## 🔧 3. Install Project Dependencies
+```
 npm install
+```
 
-This installs Express, WebSockets, dotenv, etc.
+---
 
-🔐 4. Create .env File
-Create a .env file in the root of your project:
+## 🔐 4. Create .env File
+```
 touch .env
+```
 
 Add:
+```
 SECRET_KEY=super_secret
 ADMIN_USER=arsen
 ADMIN_PASS=s3curePass!
 PORT=8080
+```
 
+---
 
-🖥 5. Project Structure
-Your repository should look like this:
+## 🖥 5. Project Structure
+```
 js-stream/
 │ server.js
 │ .env
@@ -72,40 +80,59 @@ js-stream/
 └── public/
     │ dashboard.html
     │ login.html
+```
 
+---
 
-🟣 6. Start the Node.js Server
-Run:
+## 🟣 6. Start the Node.js Server
+
+```
 npm run dev
+```
 
 Expected output:
+```
 Server started on 0.0.0.0:8080
+```
 
-Your dashboard is now available at:
+Dashboard URL:
+```
 http://<your-mac-ip>:8080/public/dashboard.html
+```
 
 Example:
+```
 http://192.168.1.148:8080/public/dashboard.html
+```
 
+---
 
-🟢 7. Raspberry Pi Setup
-7.1 Install Python & venv
+## 🟢 7. Raspberry Pi Setup
+
+### 7.1 Install Python & venv
+```
 sudo apt update
 sudo apt install python3 python3-venv python3-pip -y
+```
 
-7.2 Create venv
+### 7.2 Create venv
+```
 python3 -m venv venv
 source venv/bin/activate
+```
 
-7.3 Install packages
+### 7.3 Install packages
+```
 pip install opencv-python websocket-client
+```
 
+---
 
-📹 8. Raspberry Pi Dual Video Stream Script
-Create file:
-dual_stream.py
+## 📹 8. Raspberry Pi Dual Video Stream Script
 
-Paste:
+Create file `dual_stream.py`:
+
+```python
 import time
 import cv2
 import websocket
@@ -180,55 +207,58 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
 
-Replace <MAC_IP> with your actual IP:
+Replace `<MAC_IP>` with your actual IP, example:
+```
 192.168.1.148
+```
 
+---
 
-▶️ 9. Running Raspberry Pi Streamer
-On Raspberry Pi:
+## ▶️ 9. Running Raspberry Pi Streamer
+
+```
 source venv/bin/activate
 python3 dual_stream.py
+```
 
-On your Mac server console you should see:
+Server output should show:
+```
 ingest connected: stream=A
 ingest connected: stream=B
+```
 
+---
 
-🖼 10. Viewing Video Streams
-Open dashboard:
+## 🖼 10. Viewing Video Streams
+
+Open:
+```
 http://192.168.1.148:8080/public/dashboard.html
+```
 
-Inside dashboard you can display streams using:
+In dashboard:
+```
 <img src="/api/snapshot/A?token=super_secret">
 <img src="/api/snapshot/B?token=super_secret">
+```
 
-Or via WebSocket viewer.
+---
 
-🎉 DONE!
+# 🎉 DONE!
+
 Your system is now working:
-Raspberry Pi streams video A+B over WebSockets
 
+- Raspberry Pi streams two channels  
+- Node.js server receives frames  
+- Dashboard displays them live  
+- Authentication via token works  
+- Everything runs on the local network  
 
-Node.js server receives frames
+If you want, I can also generate:  
+✅ `dashboard.html`  
+✅ Tailwind-based UI  
+✅ full admin panel  
 
-
-Dashboard displays them live
-
-
-Token authentication is enabled
-
-
-Everything runs on your local network
-
-
-
-If you want, I can:
-✅ generate the full dashboard.html
- ✅ add CSS grid layout for 2 video windows
- ✅ add real-time logs
- ✅ make an admin page with login
- 🎨 make it look beautiful with Tailwind
-Just say "create dashboard".
-
-
+Just say **"create dashboard"**.
